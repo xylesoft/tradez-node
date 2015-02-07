@@ -1,125 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="TradeZ">
+   <head>
+      <title>TradeZ - sock</title>
+      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/css/app.css">
+
+      <base href="http://127.0.0.1:8880/">
+   </head>
    <body>
-      <h1>Hello WAMP</h1>
-      <p>Open JavaScript console to watch output.</p>
+
+      <div class="container-fluid">
+         <div class="row">
+
+            <!-- Navigation Bar -->
+            <div class="col-sm-3 col-md-2 sidebar" ng-controller="NavController">
+               <div style="text-align:center"><h3>TradeZ</h3></div>
+               <ul class="nav nav-sidebar">
+                 <li class="active"><a href="/#/">Dashboard <span class="sr-only">(current)</span></a></li>
+                 <li><a href="/#/stations/add">Add Station</a></li>
+               </ul>
+
+               <p>Username</p>
+               <input type="text" value="{{ user.username }}" />
+            </div>
+
+            <!-- Main Content -->
+            <div ng-view id="main" class="col-sm-9 col-md-10 main">
+
+            </div>
+         </div>
+      </div>
+
       <script>AUTOBAHN_DEBUG = true;</script>
-      <script src="http://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
 
-      <script>
-         // the URL of the WAMP Router (Crossbar.io)
-         //
-         var wsuri;
-         if (document.location.origin == "file://") {
-            wsuri = "ws://127.0.0.1:8080/ws";
+      <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
 
-         } else {
-            wsuri = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
-                        document.location.host + "/ws";
-         }
+      <!-- bootstrap -->
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+      <!-- wamp -->
+      <script src="//autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
 
-         // the WAMP connection to the Router
-         //
-         var connection = new autobahn.Connection({
-            url: wsuri,
-            realm: "realm1"
-         });
+      <!-- angular -->
+      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-route.js"></script>
+      <script src="/js/bower_components/angular-wamp/release/angular-wamp.js"></script>
+      
+      <!-- angular app -->
+      <script src="/js/ng-app.js"></script>
+      
+      <script src="/js/directives/editablecontent.js"></script>
+      <script src="/js/controllers/dashboardController.js"></script>
+      <script src="/js/controllers/stationAddController.js"></script>
+      <script src="/js/config.js"></script>
 
-
-         // timers
-         //
-         var t1, t2;
-
-
-         // fired when connection is established and session attached
-         //
-         connection.onopen = function (session, details) {
-
-            console.log("Connected");
-
-            // SUBSCRIBE to a topic and receive events
-            //
-            function on_counter (args) {
-               var counter = args[0];
-               console.log("on_counter() event received with counter " + counter);
-            }
-            session.subscribe('com.example.oncounter', on_counter).then(
-               function (sub) {
-                  console.log('subscribed to topic');
-               },
-               function (err) {
-                  console.log('failed to subscribe to topic', err);
-               }
-            );
-
-
-            // PUBLISH an event every second
-            //
-            t1 = setInterval(function () {
-
-               session.publish('com.example.onhello', ['Hello from JavaScript (browser)']);
-               console.log("published to topic 'com.example.onhello'");
-            }, 1000);
-
-
-            // REGISTER a procedure for remote calling
-            //
-            function mul2 (args) {
-               var x = args[0];
-               var y = args[1];
-               console.log("mul2() called with " + x + " and " + y);
-               return x * y;
-            }
-            session.register('com.example.mul2', mul2).then(
-               function (reg) {
-                  console.log('procedure registered');
-               },
-               function (err) {
-                  console.log('failed to register procedure', err);
-               }
-            );
-
-
-            // CALL a remote procedure every second
-            //
-            var x = 0;
-
-            t2 = setInterval(function () {
-
-               session.call('com.example.add2', [x, 18]).then(
-                  function (res) {
-                     console.log("add2() result:", res);
-                  },
-                  function (err) {
-                     console.log("add2() error:", err);
-                  }
-               );
-
-               x += 3;
-            }, 1000);
-         };
-
-
-         // fired when connection was lost (or could not be established)
-         //
-         connection.onclose = function (reason, details) {
-            console.log("Connection lost: " + reason);
-            if (t1) {
-               clearInterval(t1);
-               t1 = null;
-            }
-            if (t2) {
-               clearInterval(t2);
-               t2 = null;
-            }
-         }
-
-
-         // now actually open the connection
-         //
-         connection.open();
-
-      </script>
    </body>
 </html>

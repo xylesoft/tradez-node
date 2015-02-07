@@ -1,0 +1,30 @@
+
+.editableField-small {
+  display: inline-block;
+  text-align: right;
+  min-width: 40px;
+}
+.editableField-small:hover {
+  text-decoration: underline;
+}
+.editableField-medium {
+  display: inline-block;
+  text-align: right;
+  min-width: 80px;
+}
+.editableField-medium:hover {
+  text-decoration: underline;
+}
+.editableField-large {
+  display: inline-block;
+  text-align: right;
+  min-width: 120px;
+}
+.editableField-large:hover {
+  text-decoration: underline;
+}
+
+.sidebar {
+  background-color: lightyellow;
+  height: 100%;
+}
