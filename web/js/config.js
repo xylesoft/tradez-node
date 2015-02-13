@@ -19,7 +19,7 @@ TradeZ
 )
 .config(function ($wampProvider) {
     $wampProvider.init({
-       url: 'ws://127.0.0.1:8880/',
+       url: 'ws://127.0.0.1:8880/ws',
        realm: 'realm1'
        //Any other AutobahnJS options
     });

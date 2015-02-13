@@ -28,3 +28,12 @@
   background-color: lightyellow;
   height: 100%;
 }
+
+.gain {
+  background-color: #5c5;
+}
+
+.noGain {
+
+  background-color: #c55;
+}

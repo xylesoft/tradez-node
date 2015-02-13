@@ -28,7 +28,7 @@
                "type": "web",
                "endpoint": {
                   "type": "tcp",
-                  "port": 8080
+                  "port": 8880
                },
                "paths": {
                   "/": {

@@ -4,7 +4,10 @@ var TradeZ = angular.module('TradeZ',[
 
 	// 'DashboardController',
 	// 'StationsAddController'
-]);
+])
+.run(function($wamp){
+    $wamp.open();
+});
 
 TradeZ.controller('NavController', ['$scope', function($scope) {
 	$scope.user = {

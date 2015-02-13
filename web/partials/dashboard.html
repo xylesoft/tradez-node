@@ -1,17 +1,17 @@
 <div class="row">
 	<div class="col-md-12">
-        <h1>Dashboard <small>Credits Per Ton: {{ user.totalAsset }} <strong>CR</strong></small></h1>
+        <h1>Dashboard <small>Credits Per Ton: {{ creditsPerTon }} <strong>CR</strong></small></h1>
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
                 <span>
                     <strong>Credit:</strong> 
-                    <span contenteditable="true" id="credit_amount" class="editableField-small" ng-model="user.creditAmount" bindevents="blur change" onupdate="calculate" nocr="true">{{ user.creditAmount }}</span> 
+                    <div contenteditable="true" id="credit_amount" class="editableField-small" ng-model="creditAmount" onupdate="calculate" nocr="true"></div> 
                     <strong>CR</strong>
                 </span>
                 <span class="pull-right">
                     <strong>Cargo Capacity:</strong> 
-                    <span contenteditable="true" id="cargo_capacity" class="editableField-small" ng-model="user.cargoCapacity" bindevents="blur change" onupdate="calculate" nocr="true">{{ user.cargoCapacity }}</span> 
+                    <div contenteditable="true" id="cargo_capacity" class="editableField-small" onupdate="calculate" ng-model="cargoCapacity" nocr="true"></div> 
                     <strong>T</strong>
                 </span>
             </div>
@@ -23,28 +23,28 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+                                <div class="input-group-btn" id="stationADropDown">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Depart <span class="caret"></span></button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Action</a></li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Separated link</a></li>
+                                        <li ng-repeat="result in search.stationAResults">
+                                            <a class="pointer" ng-click="getStationCommodities(result, 'stationA')">
+                                                <strong>{{ result.station }}</strong> <small>({{ result.system }})</small>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div><!-- /btn-group -->
-                                <input type="text" class="form-control" aria-label="...">
+                                <input type="text" class="form-control" aria-label="..." ng-model="search.stationA" ng-keyup="findStations('stationA')">
                             </div><!-- /input-group -->
                         </div><!-- /.col-lg-6 -->
                     </div><!-- /.row -->
                     <div class="row">
                         <div class="col-lg-12">
                             <ul class="list-group">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
+                                <li ng-repeat="commodity in commodities.filtered.stationA" class="list-group-item">
+                                    <strong>{{ commodity.commodity }}</strong>
+
+                                    <span class="pull-right">(<sup>SELL</sup> <strong style="color:darkred">-{{commodity.cost_value || ' - - -'}}</strong> CR)</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -52,12 +52,16 @@
 
 <!--                    COMPARISON COLUMN -->
                 <div class="col-md-4">
+                    <div style="height: 34px;">
+                        &nbsp;
+                    </div>
                     <ul class="list-group">
-                        <li class="list-group-item">Cras </li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Morbi leo risus</li>
-                        <li class="list-group-item">Porta ac consectetur ac</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
+                        <li ng-repeat="commodity in commodities.comparison" class="list-group-item" style="text-align:center; border: 1px solid white;">
+                            
+                            <div ng-if="commodity.gain" style="background-color:lightgreen;">+{{ commodity.profit }} <strong>CR</strong> @ {{ cargoCapacity }} <strong>T</strong> is {{ (cargoCapacity * commodity.profit) }} <strong>CR</strong></div>
+                            <div ng-if="!commodity.gain" style="background-color:red">{{ commodity.profit }} <strong>CR</strong> loss</div>
+
+                        </li>
                     </ul>
                 </div>
 
@@ -66,29 +70,26 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+                                <div class="input-group-btn" id="stationBDropDown">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Destination <span class="caret"></span></button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Action</a></li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Separated link</a></li>
+                                        <li ng-repeat="result in search.stationBResults">
+                                            <a class="pointer" ng-click="getStationCommodities(result, 'stationB')">
+                                                <strong>{{ result.station }}</strong> <small>({{ result.system }})</small>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div><!-- /btn-group -->
-                                <input type="text" class="form-control" aria-label="...">
+                                <input type="text" class="form-control" aria-label="..." ng-model="search.stationB" ng-keyup="findStations('stationB')">
                             </div><!-- /input-group -->
                         </div><!-- /.col-lg-6 -->
                     </div><!-- /.row -->
                     <div class="row">
                         <div class="col-lg-12">
-                            <ul class="list-group">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
+                            <li ng-repeat="commodity in commodities.filtered.stationB" class="list-group-item">
+                                <span>(<sup>BUY</sup> <strong style="color:darkgreen">+{{commodity.purchase_value || ' - - -'}}</strong> CR)</span>
+                                <strong  class="pull-right">{{ commodity.commodity }}</strong>
+                            </li>
                         </div>
                     </div>
                 </div>

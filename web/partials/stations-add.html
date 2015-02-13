@@ -9,33 +9,37 @@
 			<div class="panel-body">
 
 					
-				<form class="form-group" method="post" action="{{ route('stations.add') }}">
+				<form class="form-group">
 					<div class="row">
 						<div class="col-md-6">
 							<label>System Name</label>
-							<input class="form-control" type="text" name="system_name" />
+							<input class="form-control" type="text" name="system_name" ng-model="systemName" />
 						</div>
 
 						<div class="col-md-6">
 							<label>Station Name</label>
-							<input class="form-control" type="text" name="station_name" />
+							<input class="form-control" type="text" name="station_name" ng-model="stationName" />
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="col-md-12">  <!-- -->
 							<label>Please Copy &amp; Paste CSV content into the text area</label>
-							<textarea class="form-control"  name="csv_content" rows="25"></textarea>
+							<textarea ng-change="parseCsvCommodities()" class="form-control" style="margin-bottom:10px" name="csv_content" rows="15" ng-model="csvContent"></textarea>
 							<!-- <div class="alert alert-danger" role="alert">Invalid CSV</div> -->
+						</div>
+						<div class="col-md-12">
+							<p class="bg-warning" ng-show="csvError != false">{{ csvError }}</p>
+							<p>
+								<strong ng-show="commodities.length > 0">{{ commodities.length }} commodities identified.</strong>
+								<button ng-disabled="$scope.csvError == false" ng-click="addStationAndCommodities()" type="submit" class="btn btn-default pull-right">Add Station</button>
+							</p>
 						</div>
 					</div>
 
-					<div class="row">
-						<div class="col-md-12">
-							<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<button type="submit" class="btn btn-default pull-right">Add Station</button>
-						</div>
-					</div>
+<!-- 					<div class="row">
+						
+					</div> -->
 				</form>
 			</div>
 		</div>
