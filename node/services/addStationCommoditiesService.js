@@ -26,7 +26,7 @@ var AddStationCommoditiesService = prime({
     	//	array commodities[{}, ..] 
     	// ])
 		this.session.register('com.tradez.rpc.updateStation', function(args) {
-			console.log('updateStation()', args[0], args[1]);
+			console.log('com.tradez.rpc.updateStation()', args[0], args[1]);
 			var stationName = args[0];
 			var systemName = args[1];
 			var commodities = args[2];
@@ -34,13 +34,15 @@ var AddStationCommoditiesService = prime({
 			console.log(stationName, systemName);
 			
 			var defer = Q.defer();
+			var stationService = require('./services/stationService').createService(this.mysql, this.session);
+
 			station = that.session.call('com.tradez.rpc.findStation', [stationName, systemName], function(res) {
-				console.log(res);
+				console.log('findStation() = ', res);
 
 				defer.resolve(res);
 			}).then(
 				function(station) {
-
+					console.log(station);
 				}, 
 				function(err) {
 					defer.reject(err);

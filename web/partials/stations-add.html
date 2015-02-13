@@ -23,6 +23,9 @@
 					</div>
 
 					<div class="row">
+						<div class="col-md-12">
+							<input type="file" id="input" fileread="csvContent">
+						</div>
 						<div class="col-md-12">  <!-- -->
 							<label>Please Copy &amp; Paste CSV content into the text area</label>
 							<textarea ng-change="parseCsvCommodities()" class="form-control" style="margin-bottom:10px" name="csv_content" rows="15" ng-model="csvContent"></textarea>

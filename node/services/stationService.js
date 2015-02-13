@@ -71,14 +71,17 @@ var StationService = prime({
 
 		this.session.register('com.tradez.rpc.findStation', function(args) {
 
-			var stationName = args[0];
-			var systemName = args[1];
-			return that.queryOne(
-				'SELECT * FROM tz_system_stations WHERE station LIKE ? AND systen LIKE ? ORDER BY station DESC LIMIT 1',
-				['%' + stationName + '%', '%' + systemName + '%']
-			).then(null, function(e) {
-				console.error(e);
-			});
+			return that.findStation(args[0], args[1]);
+		});
+    },
+
+    findStation: function(stationName, systemName) {
+
+		return that.queryOne(
+			'SELECT * FROM tz_system_stations WHERE station LIKE ? AND systen LIKE ? ORDER BY station DESC LIMIT 1',
+			['%' + stationName + '%', '%' + systemName + '%']
+		).then(null, function(e) {
+			console.error(e);
 		});
     }
 

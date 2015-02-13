@@ -10,6 +10,10 @@ TradeZ.controller('StationsAddController', ['$scope', '$wamp', function($scope, 
 
  	$scope.csvError = false;
 
+ 	// $scope.readCsvFile = function(files) {
+ 	// 	console.log(files);
+ 	// };
+
  	// Get the available commodities for a station
 	$scope.parseCsvCommodities = function() {
 
