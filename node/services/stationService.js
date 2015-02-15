@@ -57,8 +57,8 @@ var StationService = prime({
 
 			var stationName = args[0];
 			return that.queryMany(
-				'SELECT * FROM tz_system_stations WHERE station LIKE ? ORDER BY station DESC LIMIT 20',
-				['%' + stationName + '%']
+				'SELECT * FROM tz_system_stations WHERE station LIKE ? OR system LIKE ? ORDER BY station DESC LIMIT 30',
+				['%' + stationName + '%', '%' + stationName + '%']
 			).then(null, function(e) {
 				console.error(e);
 			});
