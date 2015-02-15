@@ -26,8 +26,8 @@ var CommodityService = prime({
 
 			var stationId = args[0];
 			return that.queryMany(
-				'SELECT * FROM tz_station_market_commodities WHERE station_id = ? AND revision = (SELECT MAX(revision) FROM tz_station_market_commodities)',
-				[stationId]
+				'SELECT * FROM tz_station_market_commodities WHERE station_id = ? AND revision = (SELECT MAX(revision) FROM tz_station_market_commodities WHERE station_id = ?)',
+				[stationId,stationId]
 			).then(null, function(e) {
 				console.error(e);
 			});

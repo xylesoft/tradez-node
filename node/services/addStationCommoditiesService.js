@@ -6,10 +6,16 @@ var AddStationCommoditiesService = prime({
 
 	inherits: Service,
 
-	constructor: function(mysql, session){
+	stationService: null,
+
+	commodityService: null,
+
+	constructor: function(mysql, session, stationService, commodityService){
 		console.log('Adding Station Commodities Services Starting.');
 		this.mysql = mysql;
 		this.session = session;
+		this.stationService = stationService;
+		this.commodityService = commodityService;
 
 		// Register RPCs
 		this.registerUpdateStation();
@@ -30,19 +36,51 @@ var AddStationCommoditiesService = prime({
 			var stationName = args[0];
 			var systemName = args[1];
 			var commodities = args[2];
-
-			console.log(stationName, systemName);
 			
 			var defer = Q.defer();
-			var stationService = require('./services/stationService').createService(this.mysql, this.session);
 
-			station = that.session.call('com.tradez.rpc.findStation', [stationName, systemName], function(res) {
-				console.log('findStation() = ', res);
-
-				defer.resolve(res);
-			}).then(
+			that.stationService.findStation(stationName, systemName).then(
 				function(station) {
-					console.log(station);
+					if (! station) {
+						// need to create station
+
+						// create station
+						station = that.stationService.createStation(stationName, systemName).then(null, function(err) {
+							// error 
+							console.log(err);
+							throw err;
+						});
+					}
+
+					return station;
+				},
+				function(err) {
+					console.log('error');
+					defer.reject(err);
+					return false;
+				}
+			).then(
+				function(station) {
+					console.log('Now finding revision for stationId: ' + station.id);
+					// get the new revision.
+					return [station, that.commodityService.getRevision(station.id)];
+				},
+				function(err) {
+					defer.reject(err);
+					return false;
+				}
+			).spread(
+				function(station, revision) {
+					// insert the commodities
+					return that.commodityService.addStationCommodities(revision, station.id, commodities);
+				},
+				function(err) {
+					console.err(err);
+					defer.reject(err);
+				}
+			).then(
+				function(result) {
+					defer.resolve(result);
 				}, 
 				function(err) {
 					defer.reject(err);
@@ -50,19 +88,12 @@ var AddStationCommoditiesService = prime({
 			);
 
 			return defer.promise;
-
-			// return that.queryOne(
-			// 	'SELECT count(*) as value FROM tz_system_stations'
-			// )
-			// .then(function(row) {
-			// 	return row.value;
-			// });
 		});
     },
 
 });
 
-exports.createService = function(mysql, session) {
+exports.createService = function(mysql, session, stationService, commodityService) {
 
-	return new AddStationCommoditiesService(mysql, session);
+	return new AddStationCommoditiesService(mysql, session, stationService, commodityService);
 };

@@ -4,7 +4,7 @@ var prime = require('prime');
 var Service = prime({
 
 	queryMany: function(sql, param) {
-		console.log('queryMany('+sql+')');
+		console.log('queryMany('+sql+', '+JSON.stringify(param)+')');
 		var defer = Q.defer();
 		this.mysql.query(sql, param || [], function(err, rows) {
 	  		if (! err) {
@@ -20,7 +20,7 @@ var Service = prime({
 	},
 
 	queryOne: function(sql, param) {
-		console.log('queryOne('+sql+')');
+		console.log('queryOne('+sql+', '+JSON.stringify(param)+')');
 		var defer = Q.defer();
 		this.mysql.query(sql, param || [], function(err, rows) {
 	  		if (! err) {
@@ -36,7 +36,7 @@ var Service = prime({
 	},
 
 	query: function(sql, param) {
-		console.log('query('+sql+')');
+		console.log('query('+sql+', '+JSON.stringify(param)+')');
 		var defer = Q.defer();
 		this.mysql.query(sql, param || [], function(err, rows) {
 	  		if (! err) {

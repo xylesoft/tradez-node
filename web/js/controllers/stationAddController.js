@@ -87,4 +87,11 @@ TradeZ.controller('StationsAddController', ['$scope', '$wamp', function($scope, 
     		}
     	);		
 	};
+
+	// Add watches
+
+ 	$scope.$watch('csvContent', function() {
+ 		console.log('boing');
+ 		setTimeout($scope.parseCsvCommodities, 100);
+ 	});
 }]);
