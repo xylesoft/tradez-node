@@ -34,7 +34,7 @@ TradeZ.controller('DashboardController', ['$scope', '$wamp', function($scope, $w
 	$scope.findStations = function(el) {
 		// console.log('findStation', $scope.search[el]);
 
-		if ($scope.search[el].length >= 3) {
+		if ($scope.search[el].length >= 1) {
 			// Attempt to get stations now the string is longer then 3 chars
 			var t = (new Date).getTime();
 			$wamp.call('com.tradez.rpc.findStations', [$scope.search[el]]).then(
