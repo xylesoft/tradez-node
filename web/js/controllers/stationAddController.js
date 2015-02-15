@@ -10,9 +10,7 @@ TradeZ.controller('StationsAddController', ['$scope', '$wamp', function($scope, 
 
  	$scope.csvError = false;
 
- 	// $scope.readCsvFile = function(files) {
- 	// 	console.log(files);
- 	// };
+ 	$scope.readCsvFile;
 
  	// Get the available commodities for a station
 	$scope.parseCsvCommodities = function() {
@@ -51,9 +49,13 @@ TradeZ.controller('StationsAddController', ['$scope', '$wamp', function($scope, 
 		$wamp.call('com.tradez.rpc.updateStation', [$scope.stationName, $scope.systemName, $scope.commodities]).then(
     		function (res) {
     			$scope.csvError = false;
-    			console.log(res);
-	            if (typeof res == 'object') {
+
+	            if (res) {
 	            	
+	            	$scope.csvContent = 'Successfully added/updated, add another if you like here...';
+				 	$scope.stationName = '2'
+				 	$scope.systemName = '1'
+				 	$scope.commodities = [];
 	            } else {
 	            	
 	            	$scope.csvError = res;

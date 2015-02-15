@@ -1,5 +1,6 @@
 var prime = require('prime');
 var Service = require('./service').Service;
+var Q = require('q');
 
 var CommodityService = prime({
 
@@ -33,35 +34,72 @@ var CommodityService = prime({
 		});
     },
 
-    // addStationCommodities([station station, array commodities]) 
-    registerAddStationCommodities: function() {
-    	var that = this;
+    // addStationCommodities([int stationId, array commodities]) 
+  //   registerAddStationCommodities: function() {
+  //   	var that = this;
 
-		this.session.register('com.tradez.rpc.addStationCommodities', function(args) {
-			console.log('Add new commodities.');
-			var station = args[0];
-			var commodities = args[1];
+		// this.session.register('com.tradez.rpc.addStationCommodities', function(args) {
+		// 	var station = args[0];
+		// 	var commodities = args[1];
 
-			// get new revision
-			var revision = 1; // xxxxxxxxxxx
+		// 	var defer = Q.defer();
+		// 	that.addStationCommodities(station, commodities).then(that.addStationCommodities.call(revision.));
+		// });
+  //   },
 
-			return that.query(
-				'INSERT INTO tz_station_market_commodities VALUES (null, ?, ?, ?, ?, ?, ?, ?)',
-				[
-					station.id,
-					commodities.commodity,
-					commodities.purchase_value,
-					commodities.cost_value,
-					commodities.demand,
-					commodities.supply,
-					revision
-				]
-			).then(null, function(e) {
+  	// Used to get the new revision used by its commodities.
+  	getRevision: function(stationId) {
+  		console.log('getRevision('+stationId+')');
+
+		return this.queryOne(
+			'SELECT max(revision) as revision FROM tz_station_market_commodities WHERE station_id = ? LIMIT 1',
+			[stationId]
+		).then(
+			function(result) {
+
+				return (result && result.revision) ? result.revision + 1 : 1;
+			}, 
+			function(e) {
 				console.error(e);
 				return false;
+			}
+		);
+  	},
+
+    addStationCommodities: function (revision, stationId, commodities) {
+		console.log('StationId ' + stationId + ' now applying ' + commodities.length + ' commodities with revision ' + revision);
+
+		if (commodities.length > 0) {
+
+			var that = this;
+			commodities.forEach(function(commodity) {
+				console.log('Adding ' + commodity.Commodity);
+
+				that.query(
+					'INSERT INTO tz_station_market_commodities VALUES (null, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())',
+					[
+						stationId,
+						commodity.Commodity,
+						commodity.Buy || null,
+						commodity.Sell || null,
+						commodity.Demand || null,
+						commodity.Supply || null,
+						revision
+					]
+				).then(
+					null,
+					function(e) {
+						console.error(e);
+						return false;
+					}
+				);
 			});
-		});
-    },
+
+			return true;
+		} else {
+			throw new Error('No commodities provided to addStationCommodities()');
+		}
+    }
 });
 
 exports.createService = function(mysql, session) {

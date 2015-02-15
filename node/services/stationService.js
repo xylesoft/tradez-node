@@ -76,13 +76,39 @@ var StationService = prime({
     },
 
     findStation: function(stationName, systemName) {
+    	console.log('findStation('+stationName + ','+systemName+')');
 
-		return that.queryOne(
-			'SELECT * FROM tz_system_stations WHERE station LIKE ? AND systen LIKE ? ORDER BY station DESC LIMIT 1',
+		return this.queryOne(
+			'SELECT * FROM tz_system_stations WHERE station LIKE ? AND system LIKE ? ORDER BY station DESC LIMIT 1',
 			['%' + stationName + '%', '%' + systemName + '%']
 		).then(null, function(e) {
 			console.error(e);
 		});
+    },
+
+    createStation: function(stationName, systemName) {
+		var that = this;
+
+		console.log('createStation(' + stationName + ',' + systemName + ')');
+
+    	return this.query(
+			'INSERT INTO tz_system_stations (station, system) VALUES (?, ?)',
+			[stationName, systemName]
+		).then(
+			function(result) {
+
+				if (result) {
+
+					return that.findStation(stationName, systemName);
+				}
+
+				return false;
+			}, 
+			function(e) {
+
+				console.error(e);
+			}
+		);
     }
 
 });

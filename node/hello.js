@@ -42,7 +42,7 @@ connection.onopen = function (session) {
       /**
        * Service responsible for updating commodities. 
        */
-      var csvCommodityService = require('./services/addStationCommoditiesService').createService(mysql, session);
+      var csvCommodityService = require('./services/addStationCommoditiesService').createService(mysql, session, stationService, commodityService);
 
 
    } catch (e) {
