@@ -1,4 +1,4 @@
-TradeZ.controller('DashboardController', ['$scope', '$wamp', function($scope, $wamp) {
+TradeZ.controller('DashboardController', ['$scope', '$wamp', '$cookieStore', function($scope, $wamp, $cookieStore) {
 
 	$scope.search = {
 		stationA: '',
@@ -19,11 +19,20 @@ TradeZ.controller('DashboardController', ['$scope', '$wamp', function($scope, $w
 		}
 	};
 
-	$scope.cargoCapacity = 4;
-	$scope.creditAmount = 1000;
-	$scope.creditsPerTon= 250;
+	$scope.cargoCapacity = $cookieStore.get('cargoCapacity') || 4;
+	$scope.creditAmount = $cookieStore.get('creditAmount') || 1000;
+	$scope.creditsPerTon= $cookieStore.get('creditsPerTon') || 250;
 
-	// $scope.userData.creditsPerTon = $scope.userData.creditAmount / $scope.userData.cargoCapacity;
+	// Watches against the 3 cookied values
+	$scope.$watch('cargoCapacity', function(newV, oldV) {
+		$cookieStore.put('cargoCapacity', parseInt(newV, 10));
+	});
+	$scope.$watch('creditAmount', function(newV, oldV) {
+		$cookieStore.put('creditAmount', parseInt(newV, 10));
+	});
+	$scope.$watch('creditsPerTon', function(newV, oldV) {
+		$cookieStore.put('creditsPerTon', parseInt(newV, 10));
+	});
 
 	// Calculate the financial strength against each ton
 	$scope.calculate = function(element, value) {

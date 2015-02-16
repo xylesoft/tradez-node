@@ -1,6 +1,7 @@
 var TradeZ = angular.module('TradeZ',[
 	'ngRoute',
 	'vxWamp',
+	'ngCookies'
 
 	// 'DashboardController',
 	// 'StationsAddController'
