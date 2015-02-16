@@ -80,8 +80,8 @@ var CommodityService = prime({
 					[
 						stationId,
 						commodity.Commodity,
-						commodity.Buy || null,
-						commodity.Sell || null,
+						commodity.Sell || null, // They Sell
+						commodity.Buy || null,  // They Buy
 						commodity.Demand || null,
 						commodity.Supply || null,
 						revision
