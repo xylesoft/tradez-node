@@ -68,7 +68,7 @@ TradeZ.controller('DashboardController', ['$scope', '$wamp', function($scope, $w
 
 	// Get the available commodities for a station
 	$scope.getStationCommodities = function(station, list) {
-
+		$scope.search[list] = station.station;
 		$wamp.call('com.tradez.rpc.getStationCommodities', [station.id]).then(
     		function (res) {
 

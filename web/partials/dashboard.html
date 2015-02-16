@@ -17,7 +17,7 @@
             </div>
 
 			<div class="panel-body">
-                
+
 <!--                     LEFT COLUMN -->
                 <div class="col-md-4">
                     <div class="row">
@@ -58,7 +58,8 @@
                     <ul class="list-group">
                         <li ng-repeat="commodity in commodities.comparison" class="list-group-item" style="text-align:center; border: 1px solid white;">
                             
-                            <div ng-if="commodity.gain" style="background-color:lightgreen;">+{{ commodity.profit }} <strong>CR</strong> @ {{ cargoCapacity }} <strong>T</strong> is {{ (cargoCapacity * commodity.profit) }} <strong>CR</strong></div>
+                            <div ng-if="commodity.gain && commodity.profit <= creditsPerTon" style="background-color:lightgreen;">+{{ commodity.profit }} <strong>CR</strong> @ {{ cargoCapacity }} <strong>T</strong> is {{ (cargoCapacity * commodity.profit) }} <strong>CR</strong></div>
+                            <div ng-if="commodity.gain && commodity.profit > creditsPerTon" style="background-color:yellow;">+{{ commodity.profit }} <strong>CR</strong> @ {{ cargoCapacity }} <strong>T</strong> is {{ (cargoCapacity * commodity.profit) }} <strong>CR</strong></div>
                             <div ng-if="!commodity.gain" style="background-color:red">{{ commodity.profit }} <strong>CR</strong> loss</div>
 
                         </li>
